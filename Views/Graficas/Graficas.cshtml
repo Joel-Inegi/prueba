@@ -1,0 +1,71 @@
+﻿@inject IJsonHelper Json;
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<style>
+    body {
+        font-family: Arial;
+    }
+
+    /* Then style the iframe to fit in the container div with full height and width */
+    .responsive-iframe {
+        /*position: absolute;*/
+        position: relative;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        /*height: 100%;*/
+        height: 480px;
+        border: none;
+    }
+</style>
+
+<html>
+<body>
+    <div id="DataContent">
+        <!--<div id="reportContainer"></div>-->
+        <div class="repcontainer" powerbi-settings-nav-content-pane-enabled="false">
+            <iframe id="myframe" class="responsive-iframe" src="http://w-bddesars2/ReportsPBI/powerbi/RBDyRIE/Public/ControlUsuarios/GRAFICAS_FINAL?rs:Embed=True"></iframe>
+        </div>
+    </div>
+</body>
+</html>
+<style>
+    carousel {
+        display: none;
+        height: 100%;
+    }
+
+    [_nghost-lro-c11] .pane.sections {
+        width: 100%;
+        background-color: #fff;
+        height: 100%;
+    }
+</style>
+<script>
+    /*var iframe = document.getElementById('myframe');
+    var style = document.createElement('style');
+    style.textContent =
+        'carousel {' +
+        '  display: none;' +
+        '  height: 100%;' +
+        '}'
+        ;
+    iframe.contentDocument.head.appendChild(style);
+    alert('1');
+
+    iframe.addEventListener("load", ev => {
+        const new_style_element = document.createElement("style");
+        new_style_element.textContent = "carousel { display: none; }"
+        ev.target.contentDocument.head.appendChild(new_style_element);
+    alert('2');
+
+    window.onload = function () {
+        let myiFrame = document.getElementById("myframe");
+        let doc = myiFrame.contentDocument;
+        doc.body.innerHTML = doc.body.innerHTML + '<style>carousel { display: none; height: 100%;}</style>';
+    }*/
+</script>

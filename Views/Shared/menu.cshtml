@@ -1,0 +1,58 @@
+﻿<style>
+    @* no quitar estas lineas de estilo, sirve para opacar  la pantalla cuenado se pone la cortina con el swalfire *@
+    body.swal2-shown > [aria-hidden="true"] {
+        filter: blur(5px);
+    }
+    body > * {
+        transition: 0.1s filter linear;
+    }
+</style>
+<nav class="navbar navbar-inverse navbar-default">
+    <div id="menu" class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle " data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse; dropdown">
+            <ul class="nav navbar-nav" >
+                <li class="@Html.ActivePage("Graficas", "Graficas")"><a asp-area="" asp-controller="Graficas" asp-action="Graficas" style="height:30px;">Inicio</a></li>
+                
+                <li class="@Html.ActivePage("Home", "Reportes")">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="height:30px;"> Reportes <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-area="" asp-controller="Reporte1" asp-action="Reporte1">Relación de cuentas</a></li>
+                        <li><a asp-area="" asp-controller="Reporte2" asp-action="Reporte2">Accesos por mes</a></li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("X"))
+                        {
+                            <li><a asp-area="" asp-controller="Reporte3" asp-action="Reporte3">Solicitudes atendidas por periodo</a></li>
+                            <li><a asp-area="" asp-controller="Reporte4" asp-action="Reporte4">Cuentas en solicitudes</a></li>
+                        }
+                        <li><a asp-area="" asp-controller="Reporte5" asp-action="Reporte5">Reporte trimestral</a></li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("X"))
+                        {
+                            <li><a asp-area="" asp-controller="Reporte6" asp-action="Reporte6">Validar cuentas en servidor</a></li>
+                        }
+                        <li><a asp-area="" asp-controller="Reporte7" asp-action="Reporte7">Comparativo con RBD&RIE</a></li>
+
+                        <li><a asp-area="" asp-controller="ReporteValidarUsuarioSIA" asp-action="ValidarUsuarioSIA">Usuarios no encontrados en SIA</a></li>
+                        <li><a asp-area="" asp-controller="Reporte10" asp-action="Reporte10">Relación de baja de cuentas</a></li>
+                        <li><a asp-area="" asp-controller="ReporteCambioUA" asp-action="ReporteCambioUA">Usuarios con cambios de UA</a></li>
+
+                    </ul>
+                </li>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("X"))
+                {
+                    <li class="@Html.ActivePage("AdminCuentas", "AdminCuentas")"><a asp-area="" asp-controller="AdminCuentas" asp-action="AdminCuentas" style="height:30px;">Administrar cuentas</a></li>
+                }
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a>@Context.User.Identity.Name</a></li>
+                <li><a asp-area="" asp-controller="Login" asp-action="LogOut"><img src="~/images/logout3.png" style="margin-top:-4px; padding-top:-1em; max-width:80%;width:auto;height:auto;" /></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

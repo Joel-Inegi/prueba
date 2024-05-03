@@ -1,0 +1,35 @@
+﻿@model Menu.Models.Reporte5_general
+
+<form>
+    @foreach (var direccion in Model.List_Direcciones)
+    {
+        <h5><b>Unidad administrativa fuente: @direccion.descripcion</b></h5>
+        <div class="panel panel-default" style="border-color:darkblue; margin-bottom:1px; padding-bottom:1em; margin-top:1px; padding-top:1em;">
+            <div class="panel-body">
+                <table class="table" style="border-color:darkblue; margin-bottom:0px; padding-bottom:0em; margin-top:0px; padding-top:0em;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre de usuario</th>
+                            <th scope="col">Cuenta</th>
+                            <th scope="col">Proyectos</th>
+                            <th scope="col">Unidad administrativa usuaria</th>
+                            <th scope="col">Fecha de último acceso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.List_Tabla.Where(w => w.Siglas_UA_fuente == direccion.descripcion))
+                        {
+                        <tr class="renglon ">
+                            <td>@item.Nombre_usuario</td>
+                            <td>@item.Cuenta</td>
+                            <td>@item.Proyectos (@item.BDECOAGR @item.BDPOBVIV @item.BDEST @item.BDENC)</td>
+                            <td>@item.Nombre_UA_usuario</td>
+                            <td>@item.Ultimo_Acceso</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</form>

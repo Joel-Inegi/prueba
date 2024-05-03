@@ -1,0 +1,66 @@
+﻿@model Menu.Models.Reporte2_general
+
+<form>
+    @foreach (var instancia in Model.List_Instancias)
+    {
+        <h5><b>@instancia.descripcion</b></h5>
+        <div class="panel panel-default" style="border-color:darkblue; margin-bottom:1px; padding-bottom:1em; margin-top:1px; padding-top:1em;">
+            <div class="panel-body">
+                <table class="table" style="border-color:darkblue; margin-bottom:0px; padding-bottom:0em; margin-top:0px; padding-top:0em;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Cuenta</th>
+                            <th scope="col" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></th>
+                            <th scope="col">Año</th>
+                            <th scope="col">Mes</th>
+                            <th style="text-align: center;" scope="col">Cant. de accesos</th>
+                            <th scope="col" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></th>
+                            <th scope="col">Responsable</th>
+                            <th scope="col">Correo electrónico</th>
+                            @if (!Model.Solo_Externas)
+                            {
+                                <th scope="col">Unidad administrativa</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            string x_cuenta = "";
+                            string x_instancia = "";
+                        }
+                        @foreach (var item in Model.List_Tabla.Where(w => w.Instancia == @instancia.descripcion))
+                        {
+                        <tr style="font-stretch: condensed;">
+                            @if (x_cuenta != item.Cuenta || x_instancia != item.Instancia)
+                            {
+                                x_cuenta = item.Cuenta;
+                                x_instancia = item.Instancia;
+                                <th rowspan="@item.Cant_Meses" style="vertical-align:middle;">@item.Cuenta</th>
+                                <td bgcolor="lightgray" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></td>
+                                <td style="text-align: center;">@item.Anio</td>
+                                <td style="text-align: center;">@item.Mes</td>
+                                <td style="text-align: center;">@item.Cant_Accesos</td>
+                                <td bgcolor="lightgray" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></td>
+                                <td rowspan="@item.Cant_Meses" style="vertical-align:middle;">@item.Nombre_Usuario</td>
+                                <td rowspan="@item.Cant_Meses" style="vertical-align:middle;">@item.Email_Usuario</td>
+                                @if (!Model.Solo_Externas)
+                                {
+                                    <td rowspan="@item.Cant_Meses" style="vertical-align:middle;">@item.Direccion_General</td>
+                                }
+                            }
+                            else
+                            {
+                                <td bgcolor="lightgray" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></td>
+                                <td style="text-align: center;">@item.Anio</td>
+                                <td style="text-align: center;">@item.Mes</td>
+                                <td style="text-align: center;">@item.Cant_Accesos</td>
+                                <td bgcolor="lightgray" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></td>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</form>

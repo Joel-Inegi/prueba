@@ -1,0 +1,162 @@
+﻿@model Menu.Models.LoginData
+@{
+    ViewData["Title"] = "Login";
+}
+
+    <div class="container">
+        <br />
+        
+        <div class="row" style="padding-right:0px">
+            <div class="col-sm-12">
+                <img src="~/images/INEGI_g.png" style="padding-left:350px;" />
+            </div>
+            <div class="col-sm-12"></div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-sm-12">
+                @*<img class="thumbnail img-responsive" style="border:none; margin-bottom:7px; height:15px; width:2050px;" src="~/images/pixeles.portada.jpg" />*@
+            </div>
+        </div>
+        <br /><br /> <br /><br />
+              <div class="row">
+
+
+                  <div id="ima">
+                      <img src="~/images/Logo-usuarios-2024(02).png" style="padding-left:150px;margin-left:50px;padding-right:0px;margin-right:0px;"/>
+                  </div>
+
+                  <div class="col-sm-6 col-md-4 col-md-offset-4 borderLogin">
+                      @*<div class=" form-group col-sm-6">
+
+            </div>*@
+                      <div class="account-wall">
+                          @*<img class="profile-img" src="~/images/Logo.U.DWH.png"
+                alt="">*@
+                          <form class="form-signin" asp-action="Index">
+                              <span>Usuario</span>
+                              <br />
+                              <input class="form-control" type="text" placeholder="Usuario" required autofocus asp-for="Username" id="usuario">
+                              <br />
+                              <span>Contraseña</span>
+                              <br />
+                              <input type="password" class="form-control" placeholder="Contraseña" required asp-for="Password" id="password">
+                              <br />
+                              <div align="right">
+                                  <button class="botonAceptar" type="submit">
+                                      Aceptar
+                                  </button>
+                              </div>
+                          </form>
+                          <div asp-validation-summary="ModelOnly" class="Mitext-danger" id="Errores"></div>
+                      </div>
+                  </div>
+                 
+              </div>
+        <br /><br /><br />
+        <div class="row">
+            <div class="col-md-12" align="center">
+                <span style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#706f6f; padding-right:50px;">Dirección de Integración de la Información en Base de Datos</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" align="center">
+                <span style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#706f6f; padding-right:50px;">Versión: @await Html.PartialAsync("~/Views/Shared/version.cshtml")</span>
+            </div>
+        </div>
+    </div>
+
+<style>
+    .form-signin {
+        max-width: 330px;
+        padding: 15px;
+        margin: 0 auto;
+    }
+
+        .form-signin .form-signin-heading, .form-signin .checkbox {
+            margin-bottom: 10px;
+        }
+
+        .form-signin .checkbox {
+            font-weight: normal;
+        }
+
+        .form-signin .form-control {
+            position: relative;
+            font-size: 16px;
+            height: auto;
+            padding: 10px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+            .form-signin .form-control:focus {
+                z-index: 2;
+            }
+
+        .form-signin input[type="text"] {
+            margin-bottom: -1px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .form-signin input[type="password"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+    .account-wall {
+        margin-top: 20px;
+        padding: 40px 0px 20px 0px;
+        /*  background-color: #f7f7f7; */
+        background: #ffffff !important;
+    }
+
+    .profile-img {
+        margin: 0 auto 10px;
+        display: block;
+    }
+
+    .Mitext-danger {
+        color: red !important;
+    }
+
+    .borderLogin {
+        border: solid;
+        border-color: black;
+        border-radius: 10px;
+        border-width: 1px;
+       
+
+    }
+
+    .botonAceptar {
+        background-color: #113250;
+        color: #FFFFFF;
+        text-align: center;
+        border: none;
+        border-radius: 10px;
+        height: 30px;
+        width: 70px;
+        outline: none;
+    }
+    #ima {
+        width: 200px;
+        float: left;
+        border: none;
+    }
+
+</style>
+@section scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#Errores").fadeOut(5000);
+            usuario.value = "";
+        });
+
+    </script>
+}

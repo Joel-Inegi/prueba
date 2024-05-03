@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Menu.Models.ValidarUsuariosSIA>
+    <form>
+       
+            <div class="panel-body">
+                <table class="table" style="border-color:darkblue; margin-bottom:0px; padding-bottom:0em; margin-top:0px; padding-top:0em;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Cuenta</th>
+                            <th scope="col">Correo de responsable</th>
+                            <th scope="col">Nombre de responsable</th>
+                            <th scope="col">Último acceso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr class="renglon " style="font-stretch: condensed;">
+                            <td>@Html.DisplayFor(modelItem => item.cuenta)</td>
+                            <td>@Html.DisplayFor(modelItem => item.email_usuario)</td>
+                            <td>@Html.DisplayFor(modelItem => item.nombre_usuario)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ultimo_acceso)</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            
+            @*<table class="table" style="font-size:1em; border-color:darkblue; margin-bottom:1px; margin-top:1px;">
+                <thead>
+                    <tr>
+                        <th>
+
+                            Cuenta
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            Nombre de Responsable
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="mytd">
+                                @Html.DisplayFor(modelItem => item.cuenta)
+                            </td>
+                            <td class="mytd">
+                                @Html.DisplayFor(modelItem => item.email_usuario)
+
+                            </td>
+                            <td class="mytd">
+                                @Html.DisplayFor(modelItem => item.nombre_usuario)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>*@
+    </form>

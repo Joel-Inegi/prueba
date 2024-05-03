@@ -1,0 +1,41 @@
+﻿@model Menu.Models.Reporte4_general
+
+<form>
+    <div class="panel panel-default" style="border-color:darkblue; margin-bottom:0px; padding-bottom:0em; margin-top:0px; padding-top:0em;">
+        <div class="panel-body">
+            <table class="table" style="border-color:darkblue; margin-bottom:0px; padding-bottom:0em; margin-top:0px; padding-top:0em;">
+                <thead>
+                    <tr>
+                        <th>Instancia de BD</th>
+                        <th>Total de Cuentas Validadas</th>
+                        <th>Cuentas Validadas no encontradas en Solicitudes</th>
+                        <th>Cuentas Validadas encontradas en 1 Solicitud</th>
+                        <th style="color: Highlight">Cuentas Validadas encontradas en más de 1 Solicitud</th>
+                        <th>Solicitudes con Cuentas Validadas</th>
+                        <th>Solicitudes sin Cuentas Validadas</th>
+                        <th>Total de Solicitudes</th>
+                        <th>Solicitudes con Cuenta</th>
+                        <th>Solicitudes sin Cuenta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var solicitud in Model.List_Tabla)
+                    {
+                        <tr>
+                            <td><b>@solicitud.Instancia_BD</b></td>
+                            <td><b>@solicitud.Total_Usuarios_Validados</b></td>
+                            <td>@solicitud.Usuarios_Validados_NE_en_TR_SOL</td>
+                            <td>@solicitud.Usuarios_Validados_Encontrados_en_TR_1</td>
+                            <td style="color: Highlight">@solicitud.Usuarios_Validados_Encontrados_en_TR_2ymas</td>
+                            <td>@solicitud.Solicitudes_con_Usuarios_Validados</td>
+                            <td>@solicitud.Solicitudes_sin_Usuarios_Validados</td>
+                            <td><b>@solicitud.Total_Solicitudes</b></td>
+                            <td>@solicitud.Solicitudes_con_Usuario</td>
+                            <td>@solicitud.Solicitudes_sin_Usuario</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>

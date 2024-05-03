@@ -1,0 +1,38 @@
+﻿@model Menu.Models.Reporte7_general
+
+<form>
+    <div class="panel panel-default" style="border-color:darkblue; margin-bottom:0px; padding-bottom:0em; margin-top:0px; padding-top:0em;">
+        <div class="panel-body">
+            <table class="table" style="border-color:darkblue; margin-bottom:0px; padding-bottom:0em; margin-top:0px; padding-top:0em;">
+                <thead>
+                    <tr>
+                        <th scope="col">Ambiente</th>
+                        <th scope="col">Instancia</th>
+                        <th scope="col">Cuenta</th>
+                        @*<th scope="col" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></th>*@
+                        <th scope="col">Responsable en Control de usuarios</th>
+                        <th scope="col">Responsable en RBD&RIE</th>
+                        @*<th scope="col" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></th>*@
+                        <th scope="col">Estatus</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var solicitud in Model.List_Tabla)
+                    {
+                        <tr class="renglon" style="font-stretch: condensed;">
+                            <td id="ambiente" style="background-color: azure">@solicitud.Ambiente</td>
+                            <td id="instancia" style="background-color: azure">@solicitud.Instancia</td>
+                            <td id="cuenta" style="background-color: azure">@solicitud.Cuenta</td>
+                            @*<td bgcolor="lightgray" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></td>*@
+                            <td id="responsable_a">@solicitud.Responsable_APLIC</td>
+                            <td id="responsable_r">@solicitud.Responsable_RBDYRIE</td>
+                            @*<td bgcolor="lightgray" width="1" style="padding-left:0em; padding-right:0em; margin-left:0px; margin-right:0px;"></td>*@
+                            <td id="estatus">@solicitud.Estatus</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>

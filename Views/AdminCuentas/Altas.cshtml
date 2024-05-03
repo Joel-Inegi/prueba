@@ -1,0 +1,607 @@
+﻿@model Menu.Models.AdministrarCuentas
+@{
+    ViewData["Title"] = "Administra Cuentas";
+}
+@*var datos = @ViewData["model"];*@
+
+<div class="container">
+    <br>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <label>Datos de la Cuenta</label>
+            <a asp-action="AdminCuentas">
+                <span class="close">
+                    &times;
+                </span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <form id="form" class="form-horizontal " asp-action="Altas">
+                <input class="form-control" type="hidden" asp-for="@Model.tipo" id="tipo">
+                <div class="row">
+                    <input type="hidden" id="id_area_solicitante" asp-for="@Model.id_area_solicitante" />
+                    @if (int.Parse(@ViewData["tipo"].ToString()) == 1)
+                    {
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Cuenta institucional:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.cuentaInst" id="cuentai">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <div class="col-lg-5">
+                            <span class="text-danger" style="font-size:10px; font:bold;" id="ErroresWS">Error Ingresa la Cuenta Institucional</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <div class="col-lg-2">
+                          
+                            <a id="buscarval" href="#" onclick="buscarWS();">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </div>
+
+                        <label class="col-lg-8" style="font:bold"></label>
+
+                    </div>
+
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold"></label>
+                        <div class="col-lg-5">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold"></label>
+                        <div class="col-lg-5">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Número de empleado:</label>
+                        <div class="col-lg-5" style="padding-left:2px">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.id_usuario" id="id_usuario" style="padding-left:2px" readonly>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font: bold; padding-right:0px;"> Nombre:</label>
+                        <div class="col-lg-5" style="padding-left:2px">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.nombre_usuario" id="nombre_usuario" style="padding-left:0px;" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Apellido paterno:</label>
+                        <div class="col-lg-5" style="padding-left:2px">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.apellido_paterno" id="apellido_paterno" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label class="col-lg-5" style="font: bold; padding-right: 0px;">Apellido materno:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" autofocus asp-for="@Model.apellido_materno" id="apellido_materno" readonly>
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font: bold; padding-right: 0px;">Correo electrónico:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="email" required autofocus asp-for="@Model.correo" id="correo" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Puesto:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.puesto" id="puesto" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Unidad administrativa:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.ua" id="ua" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Cuenta:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.cuenta" id="cuenta">
+                        </div>
+                    </div>
+        
+                    <div class="form-group col-lg-6">
+                        <label for="selin" class="col-lg-5" style="padding-right:0px;">Instancia:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <select class="form-control" id="selin" asp-for="@Model.id_instancia" asp-items="@((List<SelectListItem>)ViewData["instancia"])">
+                                <option value="0">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                                <span asp-validation-for="@Model.id_instancia" class="text-danger" style="font-size:10px; font:bold;" id="Erroresi"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="selse" class="col-lg-5" style="padding-right:0px;">Ambiente:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <select class="form-control" id="selse" asp-for="@Model.id_ambiente" asp-items="@((List<SelectListItem>)ViewData["ambiente"])">
+                                <option value="0">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                                <span asp-validation-for="@Model.id_ambiente" class="text-danger" style="font-size:10px; font:bold; font-stretch:condensed" id="Erroresa"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label for="selser" class="col-lg-5" style="padding-right:0px;">Servidor:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+
+                            @if (ViewData["servidorData"] != null)
+                                {
+                            <select class="form-control" id="selser" asp-for="@Model.id_servidor" asp-items="@((List<SelectListItem>)ViewData["servidor"])">
+                                <option value="0">Seleccione</option>
+                            </select>
+                                }
+                                else
+                                {
+                            <select class="form-control" id="selser" asp-for="@Model.id_servidor" asp-items="@new List<SelectListItem>()">
+                                <option value="0">Seleccione</option>
+                            </select>
+                                }
+
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                                <span asp-validation-for="@Model.id_servidor" class="text-danger" style="font-size:10px; font:bold; font-stretch:condensed" id="Erroress"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label for="seltc" class="col-lg-5" style="padding-right:0px;">Tipo de cuenta:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <select class="form-control" id="seltc" asp-for="@Model.id_tipo_cuenta" asp-items="@((List<SelectListItem>)ViewData["tcuenta"])">
+                                <option value="0">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                                <span asp-validation-for="@Model.id_tipo_cuenta" class="text-danger" style="font-size:10px; font:bold; font-stretch:condensed" id="Erroresc"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label for="setauto" class="col-lg-5" style="padding-right:0px;">Autoriza:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <select class="form-control" id="selauto" asp-for="@Model.id_autoriza" asp-items="@((List<SelectListItem>)ViewData["autoriza"])">
+                                <option value="0">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                                <span asp-validation-for="@Model.id_autoriza" class="text-danger" style="font-size:10px; font:bold; font-stretch:condensed" id="Erroresauto"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-lg-12">
+                            <label for="comment" class="col-lg-12" style="padding-left:30px;">Justificación/Observaciones:</label>
+                            <div class="col-lg-12" style="padding-left:30px;">
+                                <textarea class="form-control col-lg-11" rows="5" required asp-for="@Model.justificacion" id="comment" style="padding-left:15px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                    @if (int.Parse(@ViewData["tipo"].ToString()) == 2)
+                    {
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Cuenta institucional:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.cuentaInst" id="cuentai">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <div class="col-lg-5">
+                            <span class="text-danger" style="font-size:10px; font:bold;" id="ErroresWS">Error Ingresa la Cuenta Institucional</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <div class="col-lg-2">
+                          
+                            <a id="buscarval" href="#" onclick="buscarWS();">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </div>
+
+                        <label class="col-lg-8" style="font:bold"></label>
+
+                    </div>
+
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold"></label>
+                        <div class="col-lg-5">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold"></label>
+                        <div class="col-lg-5">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Número de empleado:</label>
+                        <div class="col-lg-5" style="padding-left:2px">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.id_usuario" id="id_usuario" style="padding-left:2px" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font: bold; padding-right: 0px;"> Nombre:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.nombre_usuario" id="nombre_usuario" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Apellido paterno:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.apellido_paterno" id="apellido_paterno" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Apellido materno:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" autofocus asp-for="@Model.apellido_materno" id="apellido_materno" readonly>
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Correo electrónico:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="email" required autofocus asp-for="@Model.correo" id="correo" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Puesto:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.puesto" id="puesto" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Unidad administrativa:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.ua" id="ua" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Cuenta:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.cuenta" id="cuenta" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Instancia:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.instancia" readonly id="selin">
+                            <input type="hidden" id="selin" asp-for="@Model.id_instancia" />
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Ambiente:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.ambiente" readonly id="selse">
+                            <input type="hidden" id="selse" asp-for="@Model.id_ambiente" />
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="selser" class="col-lg-5" style="padding-right: 0px;">Servidor:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input type="text" class="form-control" id="selser" asp-for="@Model.servidor" readonly>
+                            <input type="hidden" class="form-control" id="selser" asp-for="@Model.id_servidor">
+
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="seltc" class="col-lg-5" style="padding-right: 0px;">Tipo de cuenta:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input type="text" class="form-control" id="seltc" asp-for="@Model.tipo_cuenta" required readonly>
+                            <input type="hidden" class="form-control" id="seltc" asp-for="@Model.id_tipo_cuenta">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="setauto" class="col-lg-5" style="padding-right:0px;">Autoriza:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <select class="form-control" id="selauto" asp-for="@Model.id_autoriza" asp-items="@((List<SelectListItem>)ViewData["autoriza"])">
+                                <option value="0">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                                <span asp-validation-for="@Model.id_autoriza" class="text-danger" style="font-size:10px; font:bold; font-stretch:condensed" id="Erroresauto"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-12">
+                            <label for="comment" class="col-lg-12" style="padding-left:30px;">    Justificación/Observaciones:</label>
+                            <div class="col-lg-12" style="padding-left:30px;">
+                                <textarea class="form-control col-lg-11" rows="5" asp-for="@Model.justificacion" id="comment" style="padding-left:15px;" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    }
+
+                    @if (int.Parse(@ViewData["tipo"].ToString()) == 3)
+                    {
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Nombre:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.nombre_usuario" id="nombre_usuario" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Apellido paterno:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.apellido_paterno" id="apellido_paterno" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Apellido materno:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.apellido_materno" id="apellido_materno" readonly>
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Correo electrónico:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="email" required autofocus asp-for="@Model.correo" id="correo" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;">Cuenta:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.cuenta" id="cuenta" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Unidad administrativa:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.ua" id="ua" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Instancia:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.instancia" readonly id="selin">
+                            <input type="hidden" id="selin" asp-for="@Model.id_instancia" />
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+
+                        <label class="col-lg-5" style="font:bold; padding-right:0px;"> Ambiente:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input class="form-control" type="text" required autofocus asp-for="@Model.ambiente" readonly id="selse">
+                            <input type="hidden" id="selse" asp-for="@Model.id_ambiente" />
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="selser" class="col-lg-5" style="padding-right: 0px;">Servidor:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input type="text" class="form-control" id="selser" asp-for="@Model.servidor" readonly>
+                            <input type="hidden" class="form-control" id="selser" asp-for="@Model.id_servidor">
+
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="seltc" class="col-lg-5" style="padding-right: 0px;">Tipo de cuenta:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <input type="text" class="form-control" id="seltc" asp-for="@Model.tipo_cuenta" required readonly>
+                            <input type="hidden" class="form-control" id="seltc" asp-for="@Model.id_tipo_cuenta">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="setauto" class="col-lg-5" style="padding-right:0px;">Autoriza:</label>
+                        <div class="col-lg-5" style="padding-left:2px;">
+                            <select class="form-control" id="selauto" asp-for="@Model.id_autoriza" asp-items="@((List<SelectListItem>)ViewData["autoriza"])">
+                                <option value="0">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="col-lg-5">
+                                <span asp-validation-for="@Model.id_autoriza" class="text-danger" style="font-size:10px; font:bold; font-stretch:condensed" id="Erroresauto"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-12">
+                            <label for="comment" class="col-lg-12" style="padding-left:30px;">Justificación/Observaciones:</label>
+                            <div class="col-lg-12" style="padding-left:30px;">
+                                <textarea class="form-control col-lg-11" rows="5" asp-for="@Model.justificacion" id="comment" style="padding-left:15px;" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    }
+
+
+                    <div class="row">
+                        <div class="col-md-1 text-center"></div>
+                        <div class="col-md-11 text-center">
+                            <div class="btn-group">
+                                <button type="submit" id="btn_enviar" class="boton btn-editar" style="border:none; outline:none">Aceptar</button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-lg-5">
+                            <div asp-validation-summary="ModelOnly" class="text-danger" style="font-size:10px; font:bold;" id="Erroreco"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#selse").click(function () {
+
+                $.get("/AdminCuentas/ObtenerServidor", { id_ambiente: $("#selse").val() }, function (data) {
+                    // VACIAMOS EL DropDownList
+                    $("#selser").empty();
+                    // AÑADIMOS UN NUEVO label CON EL NOMBRE DEL ELEMENTO SELECCIONADO
+                    $("#selser").append("<option value> Seleccione"+ "</option>")
+                    // CONSTRUIMOS EL DropDownList A PARTIR DEL RESULTADO Json (data)
+                    $.each(data, function (index, row) {
+                        $("#selser").append("<option value='" + row.id_servidor + "'>" + row.servidor + "</option>")
+                    });
+                });
+            });
+
+
+
+
+
+            $("#Errores").fadeOut(5000);
+            $("#Erroresi").fadeOut(7000);
+            $("#Erroresa").fadeOut(9000);
+            $("#Erroress").fadeOut(11000);
+            $("#Erroresc").fadeOut(11000);
+            $("#Erroreco").fadeOut(11000);
+            $("#Erroresauto").fadeOut(7000);
+
+            $("#ErroresWS").hide();
+
+        });
+        function buscarWS() {
+
+            var cuentaInst = $("#cuentai").val();
+
+            $("#id_usuario").val("");
+            $("#nombre_usuario").val("");
+            $("#apellido_paterno").val("");
+            $("#apellido_materno").val("");
+            $("#correo").val("");
+            $("#puesto").val("");
+            $("#ua").val("");
+            $("#id_area_solicitante").val("");
+
+            if (cuentaInst === null || cuentaInst=== '')
+            {
+                $("#ErroresWS").show();
+                $("#ErroresWS").fadeOut(5000);
+                return;
+            }
+
+            
+            $.get('@Url.Action("Datosws", "AdminCuentas")', { cuenta: cuentaInst }, function (response) {
+
+                if (response.error) {
+                    Swal.fire(
+                                'Administracion de Cuentas',
+                                'Error del Webservice',
+                                'error'
+                            ).then((result) => {
+
+                            });
+                }
+                else {
+                    $("#id_usuario").val(response.data.id_usuario);
+                    $("#nombre_usuario").val(response.data.nombre_usuario);
+                    $("#apellido_paterno").val(response.data.apellido_paterno);
+                    $("#apellido_materno").val(response.data.apellido_materno);
+                    $("#correo").val(response.data.correo);
+                    $("#puesto").val(response.data.puesto);
+                    $("#ua").val(response.data.ua);
+                    $("#id_area_solicitante").val(response.data.id_area_solicitante);
+                }
+            });
+
+        }
+
+    </script>
+    <style>
+        .close {
+            color: #fff !important;
+            opacity: 1;
+        }
+    </style>
+}
+
+

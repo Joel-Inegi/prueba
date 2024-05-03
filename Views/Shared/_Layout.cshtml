@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<html style="background-color:#FFFFFF">
+<head>
+    <meta charset="utf-8" />
+    @*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*@
+    <meta name="viewport" content="width=1000px, initial-scale=1.0" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <title>@ViewData["Title"] - Usuarios DWH</title>
+    <link rel="icon" href="~/images/favicon.ico" />
+    <script type="text/javascript">
+        {
+            if (history.forward(1))
+                location.replace(history.forward(1))
+        }
+    </script>
+    
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/fontawesome/css/all.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.3.3/sweetalert2.min.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/lib/fontawesome/css/all.css" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.3.3/sweetalert2.min.css" />
+    </environment>
+</head>
+
+<body>
+    <style>
+        .navbar-default {
+            background-color: #435363;
+            border-color: transparent;
+            /*height:30px;
+                width:1000px;*/
+            margin-bottom: 0px;
+        }
+
+        .navbar {
+            min-height: 30px;
+            /*max-width: 1000px;*/
+        }
+
+        .navbar-nav > li > a, .navbar-brand {
+            padding-top: 5px !important;
+            padding-bottom: 0 !important;
+        }
+
+
+
+        .navbar-inverse .navbar-nav > li > a {
+            color: #fff;
+        }
+
+            .navbar-inverse .navbar-nav > li > a:hover,
+            .navbar-inverse .navbar-nav > li > a:focus {
+                color: #fff;
+                background-color: transparent;
+            }
+
+        .navbar-inverse .navbar-brand {
+            color: #fff;
+        }
+
+            .navbar-inverse .navbar-brand:hover,
+            .navbar-inverse .navbar-brand:focus {
+                color: #fff;
+                background-color: transparent;
+            }
+
+        .navbar-default .navbar-nav > .active > a {
+            color: #fff;
+            background-color: #706F6F;
+        }
+
+        .navbar-inverse .navbar-nav > .active > a:hover,
+        .navbar-inverse .navbar-nav > .active > a:focus {
+            color: #fff;
+            background-color: #706F6F;
+        }
+
+        footer {
+            border-bottom: none;
+            border-bottom-color: none;
+            border-top: none;
+            border-top-color: none;
+            LINE-HEIGHT: 8px;
+        }
+
+        .navbar-default .navbar-nav .open .dropdown-menu > li > a, .navbar-default .navbar-nav .open .dropdown-menu {
+            background-color: #435363;
+            color: #ffffff;
+        }
+
+            .dropdown-menu > .active > a:hover,
+            .dropdown-menu > .active > a:focus,
+            .dropdown-menu > li > a:hover,
+            .dropdown-menu > li > a:focus,
+            .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+            .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus,
+            .navbar-default .navbar-nav .current-menu-ancestor a.dropdown-toggle {
+                color: #FFF;
+                background-color: #706F6F;
+            }
+
+        .navbar-default .navbar-nav > .open > a.dropdown-toggle {
+            background-color: transparent;
+        }
+
+        body {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            /*            width:1000px;*/
+            font-family: Helvetica;
+            margin-left: 0px;
+        }
+        /* div.container{
+                width:1000px;
+                margin-left:0px;
+            }*/
+
+
+
+        .barra-botones {
+            width: 100%;
+            text-align: right;
+            margin-bottom: 5px;
+        }
+
+        .btn-editar {
+            /*background-color: #0077C8;*/
+            background-color: #113250;
+            color: #FFFFFF;
+            text-align: right;
+        }
+
+            .btn-editar:hover {
+                background-color: #005c99;
+            }
+
+        .btn-editar-disabled {
+            background-color: #808080;
+            color: #FFFFFF;
+            text-align: right;
+        }
+
+        .btn-clic {
+            box-shadow: 0px 0px 2px 3px rgba(0, 230, 230, 0.4);
+        }
+
+        .boton {
+            height: 30px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            margin-left: 10px;
+            padding: 7px;
+            display: inline-block;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+        }
+
+        .boton2 {
+            height: 15px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            margin-left: 0px;
+            padding: 1px;
+            transition-duration: 0.4s;
+        }
+
+        .boton3 {
+            height: 15px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            margin-left: 0px;
+            padding: 1px;
+            transition-duration: 0.4s;
+        }
+
+        .boton-barra {
+            width: 80px;
+            height: 25px;
+            border-radius: 7px;
+            text-align: center;
+            cursor: pointer;
+            margin-left: 4px;
+            padding-top: 11px;
+            display: inline-block;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+        }
+
+        .btn-neutro {
+            /*color: #0077C8;*/
+            color: #113250;
+        }
+
+            .btn-neutro:hover {
+                border-color: #005c99;
+                border-style: solid;
+                border-width: 1px;
+            }
+
+        .botones-pie {
+            display: flex;
+            float: right;
+            max-width: 500px;
+            padding-right: 25px;
+            padding-top: 10px;
+        }
+
+        .botones-pie-2, .botones-encabezado {
+            text-align: right;
+        }
+
+        .encabezado-detalle {
+            width: 100%;
+        }
+
+        .btn-neutro-img {
+            /*color: #0077C8;*/
+            color: #113250;
+        }
+
+        .btn-default-img {
+            color: #999999;
+        }
+
+            .btn-neutro-img div, .btn-default-img div {
+                font-size: 10px;
+            }
+
+        .btn-neutro-img:hover {
+            color: #80ccff;
+        }
+
+        .btn-default-img:hover {
+            color: #bfbfbf;
+        }
+
+        .boton-img {
+            text-align: center;
+            cursor: pointer;
+            margin-left: 10px;
+            padding: 5px;
+            display: inline-block;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+        }
+
+        .mytd {
+            padding-bottom: 0px !important;
+            padding-top: 0px !important;
+        }
+    </style>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+
+        @await Html.PartialAsync("~/Views/Shared/encabezado.cshtml")
+        @await Html.PartialAsync("~/Views/Shared/menu.cshtml")
+    }
+
+    <div class="container">
+        @RenderBody()
+
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <footer class="footer">
+
+                @await Html.PartialAsync("~/Views/Shared/pie.cshtml")
+
+            </footer>
+        }
+
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.3.3/sweetalert2.min.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.3.3/sweetalert2.min.js" asp-append-version="true"></script>
+    </environment>
+
+
+
+    @RenderSection("Scripts", required: false)
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#sasetpost').click(function (evt) {
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Saset", "Home")',
+                    data: {  },
+                    dataType: 'json',
+                    success: function () {
+                        window.open('http://10.1.32.126:3134/Gestion/SASET/login-SASI.html', '_blank');
+                    },
+                    error: function (error) {
+                        window.location.href = '@Url.Action("Index", "Login")';
+                    }
+                })
+
+
+            });
+
+        });
+    </script>
+
+
+    </body>
+</html>

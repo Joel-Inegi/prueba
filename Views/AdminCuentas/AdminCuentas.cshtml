@@ -1,0 +1,167 @@
+﻿@model IEnumerable<Menu.Models.AdministrarCuentas>
+
+@{
+    ViewData["Title"] = "Administra Cuentas";
+}
+<div></div>
+<div></div>
+<br />
+
+<div class="row">
+    <div class="col-lg-6">
+        <h4>Lista de Cuentas</h4>
+    </div>
+    <div class="col-lg-6">
+        <div class="form-group" style="padding-top:.25em;">
+            <a asp-action="Altas">
+                <span>
+                    <i class="fa fa-plus"></i> Agregar Cuenta
+                </span>
+            </a>
+            <a asp-action="PorArchivo" asp-route-tipo="1">
+                <span>
+                    <i class="fa fa-file-excel" style="padding-left:5px"></i> Carga de cuentas por archivo
+                </span>
+            </a>
+            <a asp-action="PorArchivo" asp-route-tipo="3">
+                <span>
+                    <i class="fa fa-trash" style="padding-left:5px"></i> Eliminar cuentas por archivo
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
+<div></div>
+<br />
+<div class="panel panel-default" style="border-color:darkblue; margin-bottom:1px; padding-bottom:1em; margin-top:1px; padding-top:1em;">
+    <table class="table" style="font-size:1em; border-color:darkblue; margin-bottom:1px; margin-top:1px;">
+        <thead>
+            <tr>
+                <th>
+
+                    Cuenta
+                </th>
+                <th>
+                    Instancia
+                </th>
+                <th>
+                    Ambiente
+                </th>
+                <th>
+                    Nombre del Responsable
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="mytd">
+                        @Html.DisplayFor(modelItem => item.cuenta)
+                    </td>
+                    <td class="mytd">
+                        @Html.DisplayFor(modelItem => item.instancia)
+                        <input type="hidden" value="@Html.DisplayFor(modelItem => item.id_ambiente)" />
+                    </td>
+                    <td class="mytd">
+                        @Html.DisplayFor(modelItem => item.servidor)
+                    </td>
+                    <td class="mytd">
+                        @Html.DisplayFor(modelItem => item.nombre_usuario)
+                    </td>
+                    <td class="mytd">
+                        <div class="btn-group">
+                            @if (item.id_tipo_cuenta != 1)
+                            {
+                                <a style="color:#113250" data-toggle="tooltip" title="Editar" asp-action="Altas" asp-route-tipo="2" asp-route-cuenta="@item.cuenta" asp-route-id_instancia="@item.id_instancia" asp-route-id_ambiente="@item.id_ambiente"><i class="fa fa-edit "></i></a>
+                            }
+                            <a style="color:#113250" data-toggle="tooltip" title="Eliminar" asp-action="Altas" asp-route-tipo="3" asp-route-cuenta="@item.cuenta" asp-route-id_instancia="@item.id_instancia" asp-route-id_ambiente="@item.id_ambiente"><i class="fa fa-trash "></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var tipo = @ViewData["tipo"];
+            var error = @ViewData["error"];
+            var salida = @ViewData["salida"];
+
+            if (tipo === 1 && error === 0) {
+                    //alert('Alta realizada correctamente');
+                    Swal.fire(
+                        'Administracion de Cuentas',
+                        'Alta realizada correctamente, con ID_RBD&RIE: ' + salida +'',
+                        'success'
+                    ).then((result) => {
+                        window.location.href = '@Url.Action("AdminCuentas", "AdminCuentas")';
+                    });
+            }
+             if (tipo === 1 && error === 5) {
+                    //alert('Alta realizada correctamente');
+                    Swal.fire(
+                        'Administracion de Cuentas',
+                        'Alta realizada, con Excepción de RBD&RIE',
+                        'warning'
+                    ).then((result) => {
+                        window.location.href = '@Url.Action("AdminCuentas", "AdminCuentas")';
+                    });
+                }
+
+                if (tipo === 2) {
+                    //alert('Actualziacion realizada correctamente');
+                    Swal.fire(
+                        'Administracion de Cuentas',
+                        'Actualziacion realizada correctamente',
+                        'success'
+                    ).then((result) => {
+                        window.location.href = '@Url.Action("AdminCuentas", "AdminCuentas")';
+                    });
+                }
+
+                if (tipo === 3) {
+                    //alert('Registro eliminado correctamente');
+                    Swal.fire(
+                        'Administracion de Cuentas',
+                        'Registro eliminado correctamente',
+                        'success'
+                    ).then((result) => {
+                        window.location.href = '@Url.Action("AdminCuentas", "AdminCuentas")';
+                    });
+                }
+
+                if (tipo === 0 && error === 2) {
+
+                    Swal.fire(
+                      'Administracion de Cuentas',
+                      'Error al insertar el registro, pongase en contacto con el administrador',
+                      'error'
+                    ).then((result) => {
+
+                    });
+                }
+
+                if (tipo === 0 && error === 3) {
+
+                    Swal.fire(
+                     'Administracion de Cuentas',
+                     'Error al insertar el registro, por falla en el servicio, pongase en contacto con el administrador',
+                     'error'
+                    ).then((result) => {
+
+                    });
+                }
+
+        });
+
+
+    </script>
+}

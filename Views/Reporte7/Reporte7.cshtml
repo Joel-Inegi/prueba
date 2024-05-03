@@ -1,0 +1,350 @@
+﻿@* Report7 : Comparativo con RBD&RIE*@
+
+@{
+    ViewData["Title"] = "Reportes";
+}
+
+<style>
+    body {
+        font-family: Arial;
+    }
+</style>
+<html>
+<body>
+    <br />
+    <div class="row">
+        <div class="col-lg-9">
+            <h4>Comparativo con RBD&RIE</h4>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group" style="padding-top:.25em;">
+                <a id="asp_XLS" href="#">
+                    <img src="~/images/icn_EXCEL(30x30).png" style="margin-top:1px; margin-left:0px; max-width:80%;width:auto;height:auto;" />
+                </a>
+                <a id="asp_PDF" href="#">
+                    <img src="~/images/icn_PDF(30x30).png" style="margin-top:1px; margin-left:20px; max-width:80%;width:auto;height:auto;" />
+                </a>
+                <!-- Trigger the modal with a button -->
+                <span class="boton btn-editar" style="font-size:.9em; float:right;" data-toggle="modal" data-target="#myModal" id="filtro">
+                    <span class="glyphicon glyphicon-filter">  </span>  Opciones de filtrado
+                </span>
+            </div>
+        </div>
+        <input id="data1" type="text" hidden />
+        <input id="data2" type="text" hidden />
+    </div>
+
+    <hr style="border-color:darkblue; margin-bottom:0px; padding-bottom:1em; margin-top:0px; padding-top:0em;" />
+
+    <div class="row" style="margin-bottom:0px; padding-bottom:0em; margin-top:0.5px; padding-top:0em;">
+        <label class="col-sm-3" for="ambiente" id="Title_Ambiente">Ambiente: Todos </label>
+        <label class="col-sm-3" for="instancia" id="Title_Instancia">Instancia: Todas</label>
+        <label class="col-sm-6" for="estatus" id="Title_Estatus">Estatus: Todos  </label>
+    </div>
+    <hr style="border-color:darkblue; margin-bottom:0px; padding-bottom:1em; margin-top:0px; padding-top:0em;" />
+
+    <label id="error" hidden>@ViewBag.Error</label>
+
+    <div id="ventanaError" align="center" hidden>
+        <img src="~/images/error2.png" />
+        <br />
+        <label style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #241178;">Lo sentimos, por el momento no podemos mostrar el reporte, póngase en contacto con el administrador en el correo</label> <a href="mailto:soporte.ptie@inegi.org.mx">soporte.ptie@inegi.org.mx</a>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Selección de filtros del reporte:</h4>
+                </div>
+                <br />
+                <div class="modal-body">
+                    <form id="checks">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="estatus">Estatus:</label>
+                                <div class="panel panel-default" id="checksEstatus" style="margin-bottom:0px; padding-bottom:.5em; margin-top:0px; padding-top:.5em; padding-left:1em;">
+                                    <label class="checkbox-inline" id="Correcto"><input type="checkbox" id="1" value="Correcto" checked>Correcto</label>
+                                    <label class="checkbox-inline" id="Responsable"><input type="checkbox" id="2" value="Responsable" checked>Responsable diferente</label>
+                                    <label class="checkbox-inline" id="RBD"><input type="checkbox" id="3" value="RBD" checked>No en RBD&RIE</label>
+                                    <label class="checkbox-inline" id="Aplicacion"><input type="checkbox" id="4" value="Aplicacion" checked>No en Aplicación</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <form id="checks">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="ambientes">Ambiente:</label>
+                                <div class="panel panel-default" id="checksAmbientes" style="margin-bottom:0px; padding-bottom:.5em; margin-top:0px; padding-top:.5em; padding-left:1em;">
+                                    @foreach (var ambiente in @ViewBag.Ambientes)
+                                    {
+                                        <label class="checkbox-inline"><input type="checkbox" id="@ambiente.id_ambiente" value="@ambiente.descripcion" checked>@ambiente.descripcion</label>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <form id="checks">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="instancias">Instancia:</label>
+                                <div class="panel panel-default" id="checksInstancias" style="margin-bottom:0px; padding-bottom:.5em; margin-top:0px; padding-top:.5em; padding-left:1em;">
+                                    @foreach (var instancia in @ViewBag.Instancias)
+                                    {
+                                        <label class="checkbox-inline"><input type="checkbox" id="@instancia.id_instancia" value="@instancia.descripcion" checked>@instancia.descripcion</label>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                </div>
+                <div class="modal-footer">
+                    <span class="boton btn-editar" style="font-size:.9em" id="aplicarFiltro" data-dismiss="modal" onclick="aplicaFiltros();">Aplicar</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="DataContent">
+
+    </div>
+</body>
+</html>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var error = $("#error").html();
+            if (error === "True") {
+                ocultaBotones();
+                $("#DataContent").hide();
+                $("#ventanaError").show();
+            }
+            else {
+                obtenSeleccion();    // es necesario llamar esta función para que se cargen los valores de las fechas que se mandarían en caso de que mande guardar en XLS o PDF
+                cargaDatos();
+            }
+
+            function ocultaBotones() {
+                $("#filtro").hide();
+                $("#asp_XLS").hide();
+                $("#asp_PDF").hide();
+            }
+
+            function download(url, filename) {
+                fetch(url).then(function (t) {
+                    return t.blob().then((b) => {
+                        var a = document.createElement("a");
+                        a.href = URL.createObjectURL(b);
+                        a.setAttribute("download", filename);
+                        a.click();
+                    }
+                    );
+                });
+            }
+
+            function cargaDatos() {
+                cortina();
+                $.get('@Url.Action("Datos", "Reporte7")', { xEstatus: "Todos", xAmbientes: "Todos", xInstancias: "Todas"}, function (response) {     // al entrar, de esta manera la primera vez se manda traer todos los datos
+                    $("#DataContent").html(response.dataT);
+                    $("#data1").val(response.data1);
+                    if ($("#DataContent").html().indexOf("Lo sentimos, por el momento") > 0) {
+                        ocultaBotones();
+                    }
+                    Swal.close();
+                });
+            }
+
+            function cortinaError() {
+                Swal.fire(
+                    'Reportes',
+                    'Error al descargar el archivo, inténtelo nuevamente',
+                    'error'
+                ).then((result) => { });
+            }
+
+            function generaArchivo(xTipo) {
+                var x_url;
+                if (xTipo == "XLS") {
+                    x_url = '@Url.Action("Reporte7_XLS", "Reporte7")';   // XLS
+                }
+                else {
+                    x_url = '@Url.Action("Reporte7_PDF", "Reporte7")';   // PDF
+                }
+                cortina();
+                var data1 = JSON.parse($("#data1").val());
+                var xjson1 = JSON.stringify(data1);
+                $.ajax({
+                    type: 'POST',
+                    url: x_url,
+                    data: { json1: xjson1, es: Est, am: Amb, i2: Ins },
+                    datatype: "text",
+                    success: function (response) {
+                        Swal.close();
+                        if (response.error === true) {
+                            cortinaError();
+                        }
+                        else {
+                            download('/temp' + '/' + response.dataT.nombre, response.dataT.nombre);
+                        }
+                    }
+                });
+            }
+
+            $("#asp_XLS").click
+                (
+                    function () {
+                        generaArchivo("XLS");
+                    }
+            );
+
+            $("#asp_PDF").click
+                (
+                    function () {
+                        generaArchivo("PDF");
+                    }
+            );
+        });
+
+        var Est = "Todos";
+        var Estatus = "1234";
+        var Ins = "Todas";
+        var Instancias = "1234";
+        var Amb = "Todos";
+        var Ambientes = "12";
+
+        function determinaAmbientes() {
+            Amb = "";
+            Ambientes = "";
+            Todos_Amb = true;
+            $('#checksAmbientes input[type=checkbox]').each(function () {
+                if ($(this).is(":checked")) {
+                    Amb = Amb + $(this).val() + ', ';
+                    Ambientes = Ambientes + $(this).attr("id");
+                }
+                else {
+                    Todos_Amb = false;
+                }
+            });
+            if (Todos_Amb) {
+                Amb = "Todos";
+            }
+            else {
+                if (Ambientes == "") {
+                    Amb = "(ninguno)";
+                }
+                else {
+                    Amb = Amb.substr(0, Amb.length - 2);
+                }
+            }
+        }
+
+        function determinaInstancias() {
+            Ins = "";
+            Instancias = "";
+            Todas_Ins = true;
+            $('#checksInstancias input[type=checkbox]').each(function () {
+                if ($(this).is(":checked")) {
+                    Ins = Ins + $(this).val() + ', ';
+                    Instancias = Instancias + $(this).attr("id");
+                }
+                else {
+                    Todas_Ins = false;
+                }
+            });
+            if (Todas_Ins) {
+                Ins = "Todas";
+            }
+            else {
+                if (Instancias == "") {
+                    Ins = "(ninguna)";
+                }
+                else {
+                    Ins = Ins.substr(0, Ins.length - 2);
+                }
+            }
+        }
+
+        function determinaEstatus() {
+            Est = "";
+            Estatus = "";
+            Todas_Est = true;
+            $('#checksEstatus input[type=checkbox]').each(function () {
+                if ($(this).is(":checked")) {
+                    Est = Est + $('#' + $(this).val()).text() + ', ';
+                    Estatus = Estatus + $(this).attr("id");
+                }
+                else {
+                    Todas_Est = false;
+                }
+            });
+            if (Todas_Est) {
+                Est = "Todos";
+            }
+            else {
+                if (Estatus == "") {
+                    Est = "(ninguno)";
+                }
+                else {
+                    Est = Est.substr(0, Est.length - 2);
+                }
+            }
+        }
+
+        function ponTitulos() {
+            $("#Title_Estatus").text("Estatus: " + Est);
+            $("#Title_Instancia").text("Instancia: " + Ins);
+            $("#Title_Ambiente").text("Ambiente: " + Amb);
+        }
+
+        function obtenSeleccion() {
+            // Instancia
+            determinaInstancias();
+
+            // Ambiente
+            determinaAmbientes();
+
+            // Estatus
+            determinaEstatus();
+        }
+
+        function cortina() {
+            Swal.fire({
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                allowOutsideClick: false,
+                scrollbarPadding: false,
+                showConfirmButton: false,
+                imageUrl: "../../../images/cargando.gif",
+                title: 'Por favor espere ...'
+            })
+        }
+
+        function aplicaFiltros() {
+            obtenSeleccion();
+            ponTitulos();
+            cortina();
+            var request = $.get('@Url.Action("Datos", "Reporte7")', { xEstatus: Est, xAmbientes: Amb, xInstancias: Ins }, function (response) {     // aquí ya no se manda traer todo, solo lo que el usuario eligió
+                $("#DataContent").html(response.dataT);
+                $("#data1").val(response.data1);
+                if ($("#DataContent").html().indexOf("Lo sentimos, por el momento") > 0) {
+                    ocultaBotones();
+                }
+                Swal.close();
+            });
+            request.error(function (httpObj, textStatus) {
+                if (httpObj.status == 401) {
+                    swal.close();
+                    window.location.href = '@Url.Action("Index","Login")';
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,70 @@
+﻿@* Report4 : Cuentas en solicitudes*@
+
+@{
+    ViewData["Title"] = "Reportes";
+}
+
+<style>
+    body {
+        font-family: Arial;
+    }
+</style>
+<html>
+<body>
+    <br />
+    <div class="row">
+        <div class="col-lg-9">
+            <h4>Cuentas en solicitudes</h4>
+        </div>
+    </div>
+
+    <hr style="border-color:darkblue; margin-bottom:0px; padding-bottom:1em; margin-top:0px; padding-top:0em;" />
+
+    <label id="error" hidden>@ViewBag.Error</label>
+
+    <div id="ventanaError" align="center" hidden>
+        <img src="~/images/error2.png" />
+        <br />
+        <label style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #241178;">Lo sentimos, por el momento no podemos mostrar el reporte, póngase en contacto con el administrador en el correo</label> <a href="mailto:soporte.ptie@inegi.org.mx">soporte.ptie@inegi.org.mx</a>
+    </div>
+
+    <div id="DataContent">
+
+    </div>
+</body>
+</html>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var error = $("#error").html();
+            if (error === "True") {
+                $("#DataContent").hide();
+                $("#ventanaError").show();
+            }
+            else {
+                cargaDatos();
+            }
+
+            function cargaDatos() {
+                cortina();
+                $.get('@Url.Action("Datos", "Reporte4")', { }, function (response) { 
+                    $("#DataContent").html(response.dataT);
+                    Swal.close();
+                });
+            }
+
+            function cortina() {
+                Swal.fire({
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    allowOutsideClick: false,
+                    scrollbarPadding: false,
+                    showConfirmButton: false,
+                    imageUrl: "../../../images/cargando.gif",
+                    title: 'Por favor espere ...'
+                })
+            }
+        });
+    </script>
+}

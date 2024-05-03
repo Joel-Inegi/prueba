@@ -1,0 +1,115 @@
+﻿@model IEnumerable<Menu.Models.Reporte1_detalle>
+
+<style>
+    /* Style the tab content */
+    .tabcontent {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+        width:inherit;
+    }
+</style>
+
+<body>
+    @{
+        bool primeraSolicitud = true;
+        string clase;
+        string ruta = "";
+        string buscar = "\\";
+    }
+    <form>
+        <div class="container" style="width:inherit; margin-top:5px; margin-bottom:5px;">
+            <ul class="nav nav-tabs" style="width: inherit;">
+                @foreach (var cuenta in @Model)
+                {
+                    @if (primeraSolicitud)
+                    {
+                        <li class="active"><a data-toggle="tab" href="#@cuenta.Id_Solicitud">@cuenta.Id_Solicitud</a></li>
+                    }
+                    else
+                    {
+                        <li><a data-toggle="tab" href="#@cuenta.Id_Solicitud">@cuenta.Id_Solicitud</a></li>
+                    }
+                    primeraSolicitud = false;
+                }
+            </ul>
+            <div class="tab-content">
+                @{primeraSolicitud = true;}
+                @foreach (var cuenta in @Model)
+                {
+                    ruta = (cuenta.Ruta_y_Archivo as string).Replace("C:\\", "");
+                    ruta = "https://365inegi-my.sharepoint.com/personal/roberto_macias_inegi_org_mx/Documents/" + ruta.Replace(buscar, "/");
+                    ruta = ruta.ToLower();
+                    ruta = ruta.Replace(".docx", ".pdf").Replace(".xlsx", ".pdf").Replace(".doc", ".pdf").Replace(".xls", ".pdf").Replace(".odt", ".pdf");
+                    @if (primeraSolicitud)
+                    {
+                        clase = "tab-pane fade in active";
+                    }
+                    else
+                    {
+                        clase = "tab-pane fade";
+                    }
+                    primeraSolicitud = false;
+                    <div id="@cuenta.Id_Solicitud" class="@clase">
+                        <div class="tabcontent" >
+                            <table class="table" style="font-size:1em; border-color:darkblue; margin-bottom:1px; margin-top:1px; width:inherit" >
+                                <tbody>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Id solicitud</b></td>
+                                        <td class="mytd">
+                                            @if (ruta.ToLower().Contains(".pdf"))
+                                            {
+                                                <a href="@ruta" target="_blank"> @cuenta.Id_Solicitud</a>
+                                            }
+                                            else
+                                            {
+                                                @cuenta.Id_Solicitud
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Fecha de solicitud</b></td>
+                                        <td class="mytd">@cuenta.Fecha_Solicitud</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Nombre de usuario</b></td>
+                                        <td class="mytd">@cuenta.Nombre_Usuario</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Email de usuario</b></td>
+                                        <td class="mytd">@cuenta.Email_Usuario</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Dependencia o Empresa</b></td>
+                                        <td class="mytd">@cuenta.Dependencia_Empresa</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Unidad Administrativa actual</b></td>
+                                        <td class="mytd">@cuenta.Direccion_General</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Tipo de Solicitud</b></td>
+                                        <td class="mytd">@cuenta.Tipo_Solicitud</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Justificación</b></td>
+                                        <td class="mytd">@cuenta.Justificacion</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Instancia de BD</b></td>
+                                        <td class="mytd">@cuenta.Instancia</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="col" class="mytd"><b>Rol(es)</b></td>
+                                        <td class="mytd">@cuenta.Rol</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </form>
+</body>
+

@@ -1,0 +1,280 @@
+﻿@{
+    ViewData["Title"] = "Reportes";
+}
+
+<style>
+    body {
+        font-family: Arial;
+    }
+</style>
+<html>
+<body>
+    <br />
+    <div class="row">
+        <div class="col-lg-9">
+            <h4>Usuarios no encontrados en SIA</h4>
+        </div>
+        <div id="opc" class="col-lg-3">
+            <div class="form-group" style="padding-top:.25em;">
+                <a id="asp_XLS" href="#">
+                    <img src="~/images/icn_EXCEL(30x30).png" style="margin-top:1px; margin-left:0px; max-width:80%;width:auto;height:auto;" />
+                </a>
+                <a id="asp_PDF" href="#">
+                    <img src="~/images/icn_PDF(30x30).png" style="margin-top:1px; margin-left:20px; max-width:80%;width:auto;height:auto;" />
+                </a>
+
+            </div>
+        </div>
+        <input id="dataSIA" type="text" hidden />
+    </div>
+    @*<hr style="border-color:darkblue; margin-bottom:0px; padding-bottom:1em; margin-top:0px; padding-top:0em;" />
+
+    <div class="row" style="margin-bottom:0px; padding-bottom:0em; margin-top:0.5px; padding-top:0em;">
+        <label class="col-sm-3" >Institución: Todas </label>
+        <label class="col-sm-3" >Instancia: Todas</label>
+        <label class="col-sm-6" ></label>
+    </div>*@
+
+    <div class="panel panel-default" style="border-color:darkblue; margin-bottom:1px; padding-bottom:1em; margin-top:1px; padding-top:1em;">
+
+        <div id="DataContent">
+
+        </div>
+
+    </div>
+</body>
+</html>
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            buscarWS();
+
+            function download(url, filename) {
+                fetch(url).then(function (t) {
+                    return t.blob().then((b) => {
+                        var a = document.createElement("a");
+                        a.href = URL.createObjectURL(b);
+                        a.setAttribute("download", filename);
+                        a.click();
+                    }
+                    );
+                });
+            }
+
+
+           function buscarWS() {
+
+
+             Swal.fire({
+                 type: 'info',
+                 allowEscapeKey: false,
+                 allowEnterKey: false,
+                 allowOutsideClick: false,
+                 scrollbarPadding: false,
+                 showConfirmButton: false,
+                 imageUrl: "../../../images/cargando.gif",
+                 title: 'Por favor espere ...'
+             })
+
+             $.get('@Url.Action("Datos", "ReporteValidarUsuarioSIA")', {}, function (response) {
+
+                 if (response.data0) {
+
+                     $("#DataContent").html(response.data);
+                     $("#dataSIA").val('{}');
+                     //$("#opc").hide();
+
+
+                 } else {
+
+                     if (response.error) {
+
+                             $("#DataContent").html(response.data);
+                             $("#dataSIA").val('{}');
+
+                     }
+                     else {
+                         //mostrar data
+                         $("#DataContent").html(response.data);
+                         $("#dataSIA").val(response.data2);
+
+
+                     }
+
+                 }
+
+                 Swal.close();
+            });
+
+            }
+
+
+            $("#asp_XLS").click
+                (
+                   function () {
+
+
+                        @*Swal.fire({
+                            type: 'info',
+                            allowEscapeKey: false,
+                            allowEnterKey: false,
+                            allowOutsideClick: false,
+                            scrollbarPadding: false,
+                            showConfirmButton: false,
+                            imageUrl: "../../../images/cargando.gif",
+                            title: 'Por favor espere ...'
+                        });
+
+                        var dataSIA = JSON.parse($("#dataSIA").val());
+
+                        $.post('@Url.Action("ReporteSIA_PDF", "ReporteValidarUsuarioSIA")', dataSIA, function (response) {
+
+                            Swal.close();
+
+                            if (response.error === true) {
+
+
+                                Swal.fire(
+                                    'Administracion de Cuentas',
+                                    'Error al descargar el archivo',
+                                    'error'
+                                ).then((result) => {
+
+                                });
+
+
+                            }
+                            else {
+                                //window.location = '/temp' + '/' + response.data.nombre;
+
+                                download('/temp' + '/' + response.data.nombre, response.data.nombre);
+
+                            }
+
+                        });*@
+
+
+                        Swal.fire({
+                            type: 'info',
+                            allowEscapeKey: false,
+                            allowEnterKey: false,
+                            allowOutsideClick: false,
+                            scrollbarPadding: false,
+                            showConfirmButton: false,
+                            imageUrl: "../../../images/cargando.gif",
+                            title: 'Por favor espere ...'
+                        });
+                       
+                        var dataSIA = JSON.parse($("#dataSIA").val());
+
+                        var jsonData = JSON.stringify(dataSIA);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("ReporteSIA_XLS", "ReporteValidarUsuarioSIA")',
+                            data: { json: jsonData },
+                            datatype: "text",
+                            success: function (response) {
+
+                                Swal.close();
+
+                                if (response.error === true) {
+
+
+                                    Swal.fire(
+                                        'Reportes',
+                                        'Error al descargar el archivo, inténtelo nuevamente',
+                                        'error'
+                                    ).then((result) => {
+
+                                    });
+
+                                }
+                                else {
+
+                                    //window.location = '/temp' + '/' + response.data.nombre;
+
+                                    download('/temp' + '/' + response.data.nombre, response.data.nombre);
+
+                                }
+
+
+                            }
+                        });
+                       
+                    }
+                );
+
+            $("#asp_PDF").click
+                (
+                    function () {
+
+                        Swal.fire({
+                            type: 'info',
+                            allowEscapeKey: false,
+                            allowEnterKey: false,
+                            allowOutsideClick: false,
+                            scrollbarPadding: false,
+                            showConfirmButton: false,
+                            imageUrl: "../../../images/cargando.gif",
+                            title: 'Por favor espere ...'
+                        });
+
+
+                        var dataSIA = JSON.parse($("#dataSIA").val());
+
+                        var jsonData = JSON.stringify(dataSIA);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("ReporteSIA_PDF", "ReporteValidarUsuarioSIA")',
+                            data: { json: jsonData },
+                            datatype: "text",
+                            success: function (response) {
+
+                                Swal.close();
+
+                                if (response.error === true) {
+
+
+                                    Swal.fire(
+                                        'Reportes',
+                                        'Error al descargar el archivo, inténtelo nuevamente',
+                                        'error'
+                                    ).then((result) => {
+
+                                    });
+
+                                }
+                                else {
+
+                                    //window.location = '/temp' + '/' + response.data.nombre;
+
+                                    download('/temp' + '/' + response.data.nombre, response.data.nombre);
+
+                                }
+
+
+                            }
+                        });
+                    }
+                );
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+    </script>
+}

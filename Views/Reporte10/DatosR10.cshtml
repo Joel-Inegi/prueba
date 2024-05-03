@@ -1,0 +1,62 @@
+﻿@model Menu.Models.Reporte10_general
+
+<form>
+    @foreach (var instancia in Model.List_Instancias)
+    {
+        <h5><b>@instancia.descripcion</b></h5>
+        <div class="panel panel-default" style="border-color:darkblue; margin-bottom:1px; padding-bottom:1em; margin-top:1px; padding-top:1em;">
+            <div class="panel-body">
+                <table class="table" style="border-color:darkblue; margin-bottom:0px; padding-bottom:0em; margin-top:0px; padding-top:0em;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Cuenta</th>
+                            <th scope="col">Ambiente</th>
+                            <th scope="col">Responsable</th>
+                            <th scope="col">Correo electrónico</th>
+                            @if (!Model.Solo_Externas)
+                            {
+                                <th scope="col">Unidad administrativa</th>
+                            }
+                            <th scope="col">Fecha de Baja</th>
+                            <th scope="col">Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.List_Tabla.Where(w => w.Instancia == @instancia.descripcion))
+                        {
+                        <tr title="Justificación: @item.Justificacion" class="renglon " style="font-stretch: condensed;">
+                            <td>@item.Cuenta</td>
+                            <td>@item.Ambiente</td>
+                            <td>@item.Nombre_Usuario</td>
+                            <td>@item.Email_Usuario</td>
+                            @if (!Model.Solo_Externas)
+                            {
+                                <td>@item.Direccion_General</td>
+                            }
+                            <td>@item.Fecha_Baja.Substring(0, 10)</td>
+                            @if (item.Id_Solicitud == "")
+                            {
+                                <td align="center">
+                                    <span class="boton2 btn-editar-disabled" style="font-size:.9em">
+                                        <span class="glyphicon glyphicon-info-sign">  </span>
+                                    </span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td align="center">
+                                    <a class="detalle" href="#">
+                                        <span class="boton2 btn-editar" style="font-size:.9em" onclick='llamarVistaParcial("@item.Instancia","@item.Cuenta","@item.Ambiente")' ;" data-toggle="modal" data-target="#myModal_Detalle">
+                                            <span class="glyphicon glyphicon-info-sign">  </span>
+                                        </span>
+                                    </a>
+                                </td>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</form>

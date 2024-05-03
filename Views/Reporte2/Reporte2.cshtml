@@ -1,0 +1,536 @@
+﻿@* Report2: Accesos por mes ambiente productivo*@
+
+@{
+    ViewData["Title"] = "Reportes";
+}
+
+<style>
+    body {
+        font-family: Arial;
+    }
+</style>
+<html>
+<body>
+    <br />
+    <div class="row">
+        <div class="col-lg-9">
+            <h4>Accesos por mes ambiente productivo</h4>
+        </div>
+        <div class="col-lg-3">
+            <div class="form-group" style="padding-top:.25em;">
+                <a id="asp_XLS" href="#">
+                    <img src="~/images/icn_EXCEL(30x30).png" style="margin-top:1px; margin-left:0px; max-width:80%;width:auto;height:auto;" />
+                </a>
+                <a id="asp_PDF" href="#">
+                    <img src="~/images/icn_PDF(30x30).png" style="margin-top:1px; margin-left:20px; max-width:80%;width:auto;height:auto;" />
+                </a>
+                <!-- Trigger the modal with a button -->
+                <span class="boton btn-editar" style="font-size:.9em; float:right;" data-toggle="modal" data-target="#myModal" id="filtro">
+                    <span class="glyphicon glyphicon-filter">  </span>  Opciones de filtrado
+                </span>
+            </div>
+        </div>
+        <input id="data1" type="text" hidden />
+        <input id="data2" type="text" hidden />
+    </div>
+
+    <hr style="border-color:darkblue; margin-bottom:0px; padding-bottom:1em; margin-top:0px; padding-top:0em;" />
+
+    <div class="row" style="margin-bottom:0px; padding-bottom:0em; margin-top:0.5px; padding-top:0em;">
+        <label class="col-sm-3" for="institucion" id="Title_Institucion">Institución: Todas</label>
+        <label class="col-sm-5" for="unidad_administrativa" id="Title_UA">Unidad Administrativa: Todas</label>
+        <label class="col-sm-4" for="instancia" id="Title_Instancia">Instancia: Todas</label>
+    </div>
+    <div class="row" style="margin-bottom:0px; padding-bottom:0em; margin-top:0.5px; padding-top:0em;">
+        <label class="col-sm-3" for="periodo" id="Title_periodo">Periodo: Enero-2000 a @ViewBag.UltimoMes</label>
+        <label class="col-sm-5" for="accesos" id="Title_accesos">Cant. máx. de meses a considerar por cuenta: Todos</label>
+        <label class="col-sm-4" for="busqueda" id="Title_busqueda">Busqueda por: Todos</label>
+    </div>
+
+    <hr style="border-color:darkblue; margin-bottom:0px; padding-bottom:1em; margin-top:0px; padding-top:0em;" />
+
+    <label id="error" hidden>@ViewBag.Error</label>
+
+    <div id="ventanaError" align="center" hidden>
+        <img src="~/images/error2.png" />
+        <br />
+        <label style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #241178;">Lo sentimos, por el momento no podemos mostrar el reporte, póngase en contacto con el administrador en el correo</label> <a href="mailto:soporte.ptie@inegi.org.mx">soporte.ptie@inegi.org.mx</a>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Selección de filtros del reporte:</h4>
+                </div>
+                <br />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form action="/action_page.php">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="1institucion1">Institución:</label>
+                                            <select class="form-control" id="1cbxInst_Ext_Int1">
+                                                <option value="0">Todas</option>
+                                                <option value="1">INEGI</option>
+                                                <option value="2">Externas</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="1unidad_administrativa">Unidad Administrativa:</label>
+                                            <select class="form-control" id="1cbxUnidad_Admva" disabled>
+                                                <option value="0">Todas</option>
+                                                @foreach (var ua in @ViewBag.UAs)
+                                                {
+                                                    <option value="@ua.id_unidad_administrativa">@ua.descripcion</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <div class="form-group">
+                                            <label for="acceso">Cant. máx. de meses a considerar por cuenta:</label>
+                                            <select class="form-control" id="accesos">
+                                                @foreach (var ac in @ViewBag.NumAccesos)
+                                                {
+                                                    <option value="@ac.id_acceso">@ac.descripcion</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="fini">Mes de inicio:</label>
+                                            <select class="form-control" id="cbxFecha_inicio">
+                                                @foreach (var fecha in @ViewBag.Fechas)
+                                                {
+                                                    <option id="@fecha" value="@fecha">@fecha</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="ffin">Mes de fin:</label>
+                                            <select class="form-control" id="cbxFecha_fin">
+                                                @foreach (var fecha in @ViewBag.Fechas)
+                                                {
+                                                    <option id="@fecha" value="@fecha">@fecha</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <form id="checks">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="1instancias">Instancia(s):</label>
+                                <div class="panel panel-default" id="checksInstancias" style="margin-bottom:0px; padding-bottom:.5em; margin-top:0px; padding-top:.5em; padding-left:1em;">
+                                    @foreach (var instancia in @ViewBag.Instancias)
+                                    {
+                                        <label class="checkbox-inline"><input type="checkbox" id="@instancia.id_instancia" value="@instancia.descripcion" checked>@instancia.descripcion</label>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <form>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label id="busqueda" class="checkbox-inline"><input type="checkbox" value="busqueda" onchange="javascript:muestraBusqueda()"> Búsqueda por</label>
+                                <div class="panel panel-default" id="checksBusqueda" style="margin-bottom:0px; padding-bottom:.5em; margin-top:0px; padding-top:.5em; padding-left:1em;">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <label class=" form-check-label"><input class="form-check-input radio-inline" style="vertical-align: middle; margin: 10px" type="radio" name="gridRadios1" id="gridRadios11" value="1" checked disabled>Cuenta</label>
+                                            <label class=" form-check-label"><input class="form-check-input radio-inline" style="vertical-align: middle; margin: 10px" type="radio" name="gridRadios1" id="gridRadios12" value="2" disabled>Responsable</label>
+                                            <label class=" form-check-label"><input class="form-check-input radio-inline" style="vertical-align: middle; margin: 10px" type="radio" name="gridRadios1" id="gridRadios13" value="3" disabled>Correo electrónico</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <label style="margin: 10px">Texto a buscar:</label>
+                                            <input type="text" id="texto" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" disabled>
+                                            <label style="margin: 10px; font-size:xx-small">Pueden indicarse varios valores separando por ";" (punto y coma)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <span class="boton btn-editar" style="font-size:.9em" id="aplicarFiltro" data-dismiss="modal" onclick="aplicaFiltros();">Aplicar</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="DataContent">
+
+    </div>
+</body>
+</html>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var error = $("#error").html();
+            if (error === "True") {
+                ocultaBotones();
+                $("#DataContent").hide();
+                $("#ventanaError").show();
+            }
+            else {
+                adecuaComboFechaIni();
+                adecuaComboFechaFin();
+                obtenSeleccion();    // es necesario llamar esta función para que se cargen los valores de las fechas que se mandarían en caso de que mande guardar en XLS o PDF
+                cargaDatos();
+            }
+
+            function ocultaBotones() {
+                $("#filtro").hide();
+                $("#asp_XLS").hide();
+                $("#asp_PDF").hide();
+            }
+
+            function adecuaComboFechaIni() {
+                $('#cbxFecha_inicio').children().last().attr('selected', 'selected');
+            }
+
+            function adecuaComboFechaFin() {
+                var show = true;
+                $("#cbxFecha_fin option").each(function () {
+                    if (show) {
+                        $(this).show();
+                        if ($(this).html() == $("#cbxFecha_inicio option:selected").text()) {
+                            show = false;
+                        }
+                    }
+                    else {
+                        $(this).hide();
+                    }
+                });
+                $('#cbxFecha_fin').children().first().attr('selected', 'selected');
+                $("#cbxFecha_fin").val($('#cbxFecha_fin').children().first().html());
+            }
+
+            function download(url, filename) {
+                fetch(url).then(function (t) {
+                    return t.blob().then((b) => {
+                        var a = document.createElement("a");
+                        a.href = URL.createObjectURL(b);
+                        a.setAttribute("download", filename);
+                        a.click();
+                    }
+                    );
+                });
+            }
+
+            function cargaDatos() {
+                cortina();
+                $.get('@Url.Action("Datos", "Reporte2")', { Institucion: "Todas", UA: "Todas", Instancia: "1234", fi: "", ff: "", Cant_Meses: "Todos", Busqueda: "Todos", Texto: "", Externas: false  }, function (response) {     // al entrar, de esta manera la primera vez se manda traer todos los datos
+                    $("#DataContent").html(response.dataT);
+                    $("#data1").val(response.data1);
+                    $("#data2").val(response.data2);
+                    if ($("#DataContent").html().indexOf("Lo sentimos, por el momento") > 0) {
+                        ocultaBotones();
+                    }
+                    Swal.close();
+                });
+            }
+
+            function cortinaError() {
+                Swal.fire(
+                    'Reportes',
+                    'Error al descargar el archivo, inténtelo nuevamente',
+                    'error'
+                ).then((result) => { });
+            }
+
+            function generaArchivo(xTipo) {
+                var x_url;
+                if (xTipo == "XLS") {
+                    x_url = '@Url.Action("Reporte2_XLS", "Reporte2")';   // XLS
+                }
+                else {
+                    x_url = '@Url.Action("Reporte2_PDF", "Reporte2")';   // PDF
+                }
+                cortina();
+                var data1 = JSON.parse($("#data1").val());
+                var xjson1 = JSON.stringify(data1);
+                var data2 = JSON.parse($("#data2").val());
+                var xjson2 = JSON.stringify(data2);
+                $.ajax({
+                    type: 'POST',
+                    url: x_url,
+                    data: { json1: xjson1, json2: xjson2, i1: Inst, ua: UA, i2: Ins, fi: fecha_ini_title, ff: fecha_fin_title, Cant_Meses: Ac, bu: busqueda, te: txtBusqueda },
+                    datatype: "text",
+                    success: function (response) {
+                        Swal.close();
+                        if (response.error === true) {
+                            cortinaError();
+                        }
+                        else {
+                            download('/temp' + '/' + response.dataT.nombre, response.dataT.nombre);
+                        }
+                    }
+                });
+            }
+
+            $("#asp_XLS").click
+                (
+                    function () {
+                        generaArchivo("XLS");
+                    }
+            );
+
+            $("#asp_PDF").click
+                (
+                    function () {
+                        generaArchivo("PDF");
+                    }
+            );
+
+            $("#cbxFecha_inicio").change
+                (
+                    function () {
+                        adecuaComboFechaFin();
+                    }
+            );
+        });
+
+        var fecha_ini_param;
+        var fecha_fin_param;
+        var fecha_ini_title;
+        var fecha_fin_title;
+        var fecha_ini = new Date();
+        var fecha_fin = new Date();
+        var fecha_elemento = new Date();
+        var xSeleccion;
+        var xMes;
+        var xMesIngles;
+        var xMesNumero;
+        var xAnoNumero;
+        var xMaxDia;
+        var elemento = $(this);
+
+        fecha_ini_param = "01-Jan-2000";
+        fecha_ini_title = "Enero-2000";
+
+        var Inst = "Todas";
+        var UA = "Todas";
+        var Ac = "Todos";
+
+        var Ins;
+        var Instancias;
+        var Todas_Ins;
+        determinaInstancias();
+
+        var busqueda = "Todos";
+        var txtBusqueda = "";
+
+        var externas = false;
+
+        function determinaInstancias() {
+            Ins = "";
+            Instancias = "";
+            Todas_Ins = true;
+            $('#checksInstancias input[type=checkbox]').each(function () {
+                if ($(this).is(":checked")) {
+                    Ins = Ins + $(this).val() + ', ';
+                    Instancias = Instancias + $(this).attr("id");
+                }
+                else {
+                    Todas_Ins = false;
+                }
+            });
+            if (Todas_Ins) {
+                Ins = "Todas";
+            }
+            else {
+                if (Instancias == "") {
+                    Ins = "(ninguna)";
+                }
+                else {
+                    Ins = Ins.substr(0, Ins.length - 2);
+                }
+            }
+        }
+
+        function ponTitulos() {
+            $("#Title_Institucion").text("Institución: " + Inst);
+            if (Inst == "INEGI") {
+                $("#Title_UA").text("Unidad Administrativa: " + UA);
+            }
+            else {
+                $("#Title_UA").text("Unidad Administrativa: Todas");
+            }
+            $("#Title_Instancia").text("Instancia: " + Ins);
+            $("#Title_periodo").text("Periodo: " + fecha_ini_title + " a " + fecha_fin_title);
+            $("#Title_accesos").text("Cant. máx. de meses a considerar por cuenta: " + Ac);
+            if (busqueda == "Todos") {
+                $("#Title_busqueda").text("Búsqueda por: " + busqueda);
+            }
+            else {
+                $("#Title_busqueda").text("Búsqueda por: " + busqueda + " (" + txtBusqueda + ")");
+            }
+        }
+
+        function mesEnIngles() {
+            xMes = xSeleccion.substring(0, 3);
+            switch (xMes) {
+                case "Ene": xMesIngles = "Jan"; xMaxDia = "31-"; break;
+                case "Feb": xMesIngles = "Feb"; xMaxDia = "28-"; break;
+                case "Mar": xMesIngles = "Mar"; xMaxDia = "31-"; break;
+                case "Abr": xMesIngles = "Apr"; xMaxDia = "30-"; break;
+                case "May": xMesIngles = "May"; xMaxDia = "31-"; break;
+                case "Jun": xMesIngles = "Jun"; xMaxDia = "30-"; break;
+                case "Jul": xMesIngles = "Jul"; xMaxDia = "31-"; break;
+                case "Ago": xMesIngles = "Aug"; xMaxDia = "31-"; break;
+                case "Sep": xMesIngles = "Sep"; xMaxDia = "30-"; break;
+                case "Oct": xMesIngles = "Oct"; xMaxDia = "31-"; break;
+                case "Nov": xMesIngles = "Nov"; xMaxDia = "30-"; break;
+                case "Dic": xMesIngles = "Dec"; xMaxDia = "31-"; break;
+            }
+        }
+
+        function obtenSeleccion() {
+            // Institución
+            Inst = $("#1cbxInst_Ext_Int1 option:selected").text();
+
+            // Unidad Administrativa
+            UA = $("#1cbxUnidad_Admva option:selected").text();
+
+            // Fecha de inicio
+            xSeleccion = $("#cbxFecha_inicio option:selected").text();
+            mesEnIngles();
+            fecha_ini_param = "01-" + xMesIngles + xSeleccion.substring(xSeleccion.indexOf("-"));
+            fecha_ini = new Date(fecha_ini_param);
+            fecha_ini_title = xSeleccion;
+
+            // Fecha de fin
+            xSeleccion = $("#cbxFecha_fin option:selected").text();
+            mesEnIngles();
+            fecha_fin_param = xMaxDia + xMesIngles + xSeleccion.substring(xSeleccion.indexOf("-"));
+            fecha_fin = new Date(fecha_fin_param);
+            fecha_fin_title = xSeleccion;
+
+            // Instancia
+            determinaInstancias()
+
+            // Cant. máx. de meses a considerar por cuenta
+            Ac = $("#accesos option:selected").text();
+
+            // Busqueda
+            if ($("#gridRadios11").is(':disabled')) {
+                busqueda = "Todos";
+                txtBusqueda = "";
+            }
+            else {
+                if ($("#gridRadios11").is(':checked')) {
+                    busqueda = "Cuenta";
+                }
+                else {
+                    if ($("#gridRadios12").is(':checked')) {
+                        busqueda = "Responsable";
+                    }
+                    else {
+                        busqueda = "Correo electrónico";
+                    }
+                }
+                txtBusqueda = $("#texto").val();
+            }
+
+            // Solo externas
+            if (Inst == "Externas") {
+                externas = true;
+            }
+            else {
+                externas = false;
+            }
+        }
+
+        function determinaHabilitarEdoUA() {
+            obtenSeleccion();
+            if ((Inst == "Todas") || (Inst == "Externas")) {
+                $("#1cbxUnidad_Admva").attr('disabled', 'disabled');
+                document.getElementById("1cbxUnidad_Admva").value = "0";
+            }
+            else {
+                $("#1cbxUnidad_Admva").removeAttr('disabled');
+            }
+        }
+
+        $("#1cbxInst_Ext_Int1").click
+        (
+            function () {
+                determinaHabilitarEdoUA();
+            }
+        );
+
+        function muestraBusqueda() {
+            if ($("#gridRadios11").is(':disabled')) {
+                $("#gridRadios11").removeAttr('disabled');
+                $("#gridRadios12").removeAttr('disabled');
+                $("#gridRadios13").removeAttr('disabled');
+                $("#texto").removeAttr('disabled');
+            }
+            else {
+                $("#gridRadios11").attr('disabled', 'disabled');
+                $("#gridRadios12").attr('disabled', 'disabled');
+                $("#gridRadios13").attr('disabled', 'disabled');
+                $("#texto").val("");
+                $("#texto").attr('disabled', 'disabled');
+            }
+        }
+
+        function cortina() {
+            Swal.fire({
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                allowOutsideClick: false,
+                scrollbarPadding: false,
+                showConfirmButton: false,
+                imageUrl: "../../../images/cargando.gif",
+                title: 'Por favor espere ...'
+            })
+        }
+
+        function aplicaFiltros() {
+            obtenSeleccion();
+            ponTitulos();
+            cortina();
+            var request = $.get('@Url.Action("Datos", "Reporte2")', { Institucion: Inst, UA: UA, Instancia: Instancias, fi: fecha_ini_param, ff: fecha_fin_param, Cant_Meses: Ac, Busqueda: busqueda, Texto: txtBusqueda, Externas: externas}, function (response) {     // aquí ya no se manda traer todo, solo lo que el usuario eligió
+                $("#DataContent").html(response.dataT);
+                $("#data1").val(response.data1);
+                $("#data2").val(response.data2);
+                if ($("#DataContent").html().indexOf("Lo sentimos, por el momento") > 0) {
+                    ocultaBotones();
+                }
+                Swal.close();
+            });
+            request.error(function (httpObj, textStatus) {
+                if (httpObj.status == 401) {
+                    swal.close();
+                    window.location.href = '@Url.Action("Index","Login")';
+                }
+            });
+        }
+    </script>
+}
